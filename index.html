@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>School of Law Attendance Portal</title>
+  <style>
+    /* CSS Variables for theme control */
+    :root {
+      --primary-color: #D4AF37;
+      --secondary-color: #008CBA;
+      --bg-gradient-start: #2C3E50;
+      --bg-gradient-end: #4CA1AF;
+      --text-color: #eee;
+      --container-bg: #1F1F1F;
+      --container-border: #D4AF37;
+      --font-heading: 'Georgia', serif;
+      --font-body: 'Roboto', sans-serif;
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    /* Global Styles */
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end));
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+    }
+    h1, h2, h3 {
+      font-family: var(--font-heading);
+      text-align: center;
+      margin: 10px 0;
+    }
+    p {
+      text-align: center;
+      margin: 10px 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 50px auto;
+      background: var(--container-bg);
+      padding: 30px 30px 60px;
+      border: 2px solid var(--container-border);
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      position: relative;
+      animation: slideIn 0.5s ease-out;
+    }
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      animation: fadeIn 0.5s;
+    }
+    table, th, td {
+      border: 1px solid #444;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    th {
+      background: #333;
+      color: var(--primary-color);
+    }
+    tr:hover {
+      background: #2a2a2a;
+    }
+    /* Button Styles */
+    .btn {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn:hover {
+      background: #b7952b;
+      transform: scale(1.02);
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .export-btn {
+      background: var(--secondary-color);
+    }
+    .warning {
+      color: #ff4d4d;
+      font-weight: bold;
+      font-size: 0.9em;
+      text-shadow: 1px 1px 2px #000;
+      margin-top: 5px;
+    }
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-style: italic;
+      margin-top: 30px;
+      color: var(--primary-color);
+    }
+    /* Authentication Forms */
+    .auth-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: #222;
+      padding: 30px;
+      border: 2px solid var(--primary-color);
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      animation: fadeIn 0.5s;
+    }
+    .auth-container input, .auth-container select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background: #333;
+      color: #fff;
+    }
+    .link {
+      color: var(--secondary-color);
+      cursor: pointer;
+      text-decoration: underline;
+      margin-top: 10px;
+      display: block;
+      text-align: center;
+    }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+      animation: fadeIn 0.3s;
+    }
+    .modal-content {
+      background-color: #222;
+      margin: 8% auto;
+      padding: 20px;
+      border: 2px solid var(--primary-color);
+      width: 80%;
+      max-width: 600px;
+      border-radius: 8px;
+      color: #fff;
+      animation: slideIn 0.5s;
+    }
+    .readonly {
+      background: #444;
+      border: none;
+      color: #fff;
+    }
+    /* Info Button */
+    .info-btn {
+      background: var(--secondary-color);
+      margin-top: 10px;
+    }
+    /* Additional info on login page */
+    .login-info {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.95em;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <!-- Authentication Section -->
+  <div id="authSection">
+    <!-- Login Form -->
+    <div id="loginDiv" class="auth-container">
+      <h2>Login</h2>
+      <input type="text" id="loginSapId" placeholder="College SAP ID" required>
+      <input type="password" id="loginPassword" placeholder="Password" required>
+      <button class="btn" onclick="login()">Login</button>
+      <span class="link" onclick="showSignup()">Don't have an account? Sign Up</span>
+      <span class="link" onclick="showResetPassword()">Forgot Password?</span>
+      <div class="login-info">
+        <p><strong>Attendance Management Portal</strong></p>
+        <p>Developed by Anand</p>
+        <p>This portal was created to help School of Law students accurately track their attendance and avoid administrative errors.</p>
+      </div>
+    </div>
+    <!-- Signup Form -->
+    <div id="signupDiv" class="auth-container" style="display:none;">
+      <h2>Sign Up</h2>
+      <input type="text" id="signupName" placeholder="Full Name" required>
+      <input type="text" id="signupSapId" placeholder="College SAP ID" required>
+      <input type="password" id="signupPassword" placeholder="Password" required>
+      <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+      <label>Date of Birth:</label>
+      <input type="date" id="signupDob" required>
+      <button class="btn" onclick="signup()">Sign Up</button>
+      <span class="link" onclick="showLogin()">Back to Login</span>
+    </div>
+    <!-- Reset Password Form (using Birthday) -->
+    <div id="resetDiv" class="auth-container" style="display:none;">
+      <h2>Reset Password</h2>
+      <input type="text" id="resetSapId" placeholder="College SAP ID" required>
+      <label>Date of Birth:</label>
+      <input type="date" id="resetDob" required>
+      <input type="password" id="resetNewPassword" placeholder="New Password" required>
+      <input type="password" id="resetConfirmPassword" placeholder="Confirm New Password" required>
+      <button class="btn" onclick="resetPassword()">Reset Password</button>
+      <span class="link" onclick="showLogin()">Back to Login</span>
+    </div>
+  </div>
+  
+  <!-- Main Portal Container -->
+  <div id="mainContainer" class="container" style="display:none;">
+    <div style="text-align: right;">
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+    <h1>Attendance Management Portal</h1>
+    <!-- Profile header will be populated with user details -->
+    <div id="profileHeader"></div>
+    <p id="welcomeMsg">Welcome,</p>
+    <div style="text-align: center; margin-bottom: 15px;">
+      <button class="btn" onclick="showUpdateModal()">Update Attendance</button>
+      <button class="btn" onclick="showSubjectModal()">Manage Subjects</button>
+      <button class="btn export-btn" onclick="exportCSV()">Export Data (CSV)</button>
+      <br>
+      <button class="btn info-btn" onclick="showInfoModal()">Why Manage Attendance?</button>
+    </div>
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Faculty</th>
+          <th>Scheduled</th>
+          <th>Conducted</th>
+          <th>Attended</th>
+          <th>Absent</th>
+          <th>Attendance %</th>
+          <th>Remaining Allowed Leaves</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows generated dynamically -->
+      </tbody>
+    </table>
+    <div class="footer">Made with <span style="color: red;">&#9829;</span> by Anand</div>
+  </div>
+  
+  <!-- Update Attendance Modal -->
+  <div id="updateModal" class="modal">
+    <div class="modal-content">
+      <h2>Update Attendance</h2>
+      <p>Manually update the Conducted and Attended counts for each subject. (Absent is computed automatically.)</p>
+      <form id="updateForm">
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Conducted</th>
+              <th>Attended</th>
+              <th>Absent</th>
+            </tr>
+          </thead>
+          <tbody id="updateTableBody">
+            <!-- Rows generated dynamically -->
+          </tbody>
+        </table>
+        <div style="text-align: center; margin-top: 15px;">
+          <button class="btn" type="button" onclick="saveManualUpdate()">Save</button>
+          <button class="btn" type="button" onclick="closeUpdateModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Subject Management Modal -->
+  <div id="subjectModal" class="modal">
+    <div class="modal-content">
+      <h2>Subject Setup & Management</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Subject Name</th>
+            <th>Faculty</th>
+            <th>Scheduled</th>
+            <th>Sessions</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="subjectTableBody">
+          <!-- Rows for each subject -->
+        </tbody>
+      </table>
+      <h3>Add New Subject</h3>
+      <div style="text-align: center; margin: 15px 0;">
+        <input type="text" id="newSubName" placeholder="Subject Name">
+        <input type="text" id="newSubFaculty" placeholder="Faculty Name">
+        <input type="number" id="newSubScheduled" placeholder="Total Classes" min="1">
+        <button class="btn" onclick="addNewSubject()">Add Subject</button>
+      </div>
+      <div style="text-align: center; margin-top: 15px;">
+        <button class="btn" onclick="saveSubjectChanges()">Save Changes</button>
+        <button class="btn" onclick="closeSubjectModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Session Management Modal -->
+  <div id="sessionModal" class="modal">
+    <div class="modal-content">
+      <h2>Manage Sessions for <span id="sessionSubjectName"></span></h2>
+      <table id="sessionTable">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="sessionTableBody">
+          <!-- Session rows go here -->
+        </tbody>
+      </table>
+      <div style="text-align: center; margin-top: 15px;">
+        <button class="btn" onclick="addNewSessionRow()">Add Session</button>
+      </div>
+      <div style="text-align: center; margin-top: 15px;">
+        <button class="btn" onclick="saveSessions()">Save Sessions</button>
+        <button class="btn" onclick="closeSessionModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Info Modal: Why Manage Attendance? -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <h2>Why Manage Your Attendance?</h2>
+      <p>
+        Trust me, I've seen it all. There have been countless times when a faculty or coordinator mistakenly marks you absent.
+        One extra absent and suddenly you're on thin ice – just like NMIMS Administration's promises!
+        Manage your own attendance and keep track before they surprise you with yet another "error." It might just save your future!
+      </p>
+      <div style="text-align: center; margin-top: 15px;">
+        <button class="btn" onclick="closeInfoModal()">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- User Details Modal -->
+  <div id="userDetailsModal" class="modal">
+    <div class="modal-content">
+      <h2>Update Your Details</h2>
+      <p>Please update your academic details below:</p>
+      <form id="userDetailsForm">
+        <label>School:</label>
+        <input type="text" id="userSchool" value="School of Law" readonly>
+        <label>Course:</label>
+        <select id="userCourse">
+          <option value="BA LLB (Hons.)">BA LLB (Hons.)</option>
+          <option value="BBA LLB (Hons.)">BBA LLB (Hons.)</option>
+        </select>
+        <label>Semester:</label>
+        <input type="text" id="userSemester" placeholder="e.g. X">
+        <label>Campus:</label>
+        <input type="text" id="userCampus" placeholder="e.g. Hyderabad">
+        <div style="text-align: center; margin-top: 15px;">
+          <button class="btn" type="button" onclick="saveUserDetails()">Save Details</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    // --- Global Variables & Data ---
+    let currentUser = null;
+    let currentUserName = "";
+    let subjects = []; // Initially empty
+    let currentSubjectIndexForSession = null;
+    
+    // --- Helper: Map Day string to dayNum ---
+    function getDayNum(day) {
+      switch(day) {
+        case "Sunday": return 0;
+        case "Monday": return 1;
+        case "Tuesday": return 2;
+        case "Wednesday": return 3;
+        case "Thursday": return 4;
+        case "Friday": return 5;
+        case "Saturday": return 6;
+        default: return 4;
+      }
+    }
+    
+    // --- Storage for Subjects (per user) ---
+    function loadSubjects() {
+      const data = localStorage.getItem("subjectsData_" + currentUser);
+      subjects = data ? JSON.parse(data) : [];
+    }
+    function saveSubjects() {
+      localStorage.setItem("subjectsData_" + currentUser, JSON.stringify(subjects));
+    }
+    
+    // --- User Profile Storage ---
+    function loadUserProfile() {
+      const data = localStorage.getItem("userProfile_" + currentUser);
+      return data ? JSON.parse(data) : null;
+    }
+    function saveUserProfile(profile) {
+      localStorage.setItem("userProfile_" + currentUser, JSON.stringify(profile));
+    }
+    
+    // --- User Authentication Functions ---
+    function getUsers() {
+      let users = localStorage.getItem("users");
+      return users ? JSON.parse(users) : {};
+    }
+    function saveUsers(users) {
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+    function showLogin() {
+      document.getElementById("loginDiv").style.display = "block";
+      document.getElementById("signupDiv").style.display = "none";
+      document.getElementById("resetDiv").style.display = "none";
+    }
+    function showSignup() {
+      document.getElementById("loginDiv").style.display = "none";
+      document.getElementById("signupDiv").style.display = "block";
+      document.getElementById("resetDiv").style.display = "none";
+    }
+    function showResetPassword() {
+      document.getElementById("loginDiv").style.display = "none";
+      document.getElementById("signupDiv").style.display = "none";
+      document.getElementById("resetDiv").style.display = "block";
+    }
+    // Reverted Signup: Use birthdate for signup
+    function signup() {
+      const name = document.getElementById("signupName").value.trim();
+      const sapId = document.getElementById("signupSapId").value.trim();
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("signupConfirmPassword").value;
+      const dob = document.getElementById("signupDob").value;
+      if (!name || !sapId || !password || !confirmPassword || !dob) {
+        alert("Please fill all fields.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+      let users = getUsers();
+      if (users[sapId]) {
+        alert("User already exists. Please login.");
+        showLogin();
+        return;
+      }
+      users[sapId] = { password, dob, name };
+      saveUsers(users);
+      alert("Signup successful! Please login.");
+      showLogin();
+    }
+    // Reverted Reset Password: Use birthdate for verification
+    function resetPassword() {
+      const sapId = document.getElementById("resetSapId").value.trim();
+      const dob = document.getElementById("resetDob").value;
+      const newPassword = document.getElementById("resetNewPassword").value;
+      const confirmPassword = document.getElementById("resetConfirmPassword").value;
+      if (!sapId || !dob || !newPassword || !confirmPassword) {
+        alert("Please fill all fields.");
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+      let users = getUsers();
+      if (!users[sapId]) {
+        alert("User does not exist.");
+        return;
+      }
+      if (users[sapId].dob !== dob) {
+        alert("Date of Birth does not match our records.");
+        return;
+      }
+      users[sapId].password = newPassword;
+      saveUsers(users);
+      alert("Password reset successful! Please login.");
+      showLogin();
+    }
+    function login() {
+      const sapId = document.getElementById("loginSapId").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      if (!sapId || !password) {
+        alert("Please fill all fields.");
+        return;
+      }
+      let users = getUsers();
+      if (!users[sapId] || users[sapId].password !== password) {
+        alert("Invalid credentials.");
+        return;
+      }
+      currentUser = sapId;
+      currentUserName = users[sapId].name;
+      document.getElementById("authSection").style.display = "none";
+      document.getElementById("mainContainer").style.display = "block";
+      document.getElementById("welcomeMsg").textContent = "Welcome, " + currentUserName + "!";
+      loadSubjects();
+      updateTable();
+      if (!loadUserProfile()) {
+        showUserDetailsModal();
+      } else {
+        updateProfileHeader();
+      }
+    }
+    function logout() {
+      currentUser = null;
+      currentUserName = "";
+      document.getElementById("mainContainer").style.display = "none";
+      document.getElementById("authSection").style.display = "block";
+      showLogin();
+    }
+    
+    // --- Dashboard & Attendance Functions ---
+    function calculateAbsent(conducted, attended) {
+      return conducted - attended;
+    }
+    function calculateAttendancePercent(conducted, attended) {
+      return conducted > 0 ? ((attended / conducted) * 100).toFixed(2) : "0.00";
+    }
+    function calculateRemainingLeaves(scheduled, conducted, attended) {
+      let minimumRequired = Math.ceil(0.8 * scheduled);
+      let remainingFuture = scheduled - conducted;
+      let needed = minimumRequired - attended;
+      if (needed < 0) needed = 0;
+      let allowed = remainingFuture - needed;
+      return allowed > 0 ? allowed : 0;
+    }
+    function getAbsenceWarning(scheduled, conducted, attended) {
+      const absent = calculateAbsent(conducted, attended);
+      if (absent <= 0) return "";
+      if (absent >= 15) {
+        return "Fifteen or more absences! Time to look for a political connection!";
+      }
+      if (absent === 14) {
+        return "Fourteen absences – you're dangerously close! Consider that medical certificate ASAP.";
+      }
+      if (absent === 13) {
+        return "Thirteen absences! Almost time for a medical certificate.";
+      }
+      if (absent === 12) {
+        return "Twelve absences! Better get a medical certificate before you get debarred.";
+      }
+      if (absent === 11) {
+        return "Eleven absences! Even NMIMS admin is starting to notice your record.";
+      }
+      if (absent === 10) {
+        return "Ten absences – that's enough to start a campus meme!";
+      }
+      if (absent === 9) {
+        return "Nine absences! Your record is almost as legendary as NMIMS fee hikes.";
+      }
+      if (absent === 8) {
+        return "Eight absences – don't let this become your norm.";
+      }
+      if (absent === 7) {
+        return "Seven absences! Don't be another Bhavya Chaturvedi.";
+      }
+      if (absent === 6) {
+        return "Six absences already! Even your classmates are gossiping about your attendance.";
+      }
+      if (absent === 5) {
+        return "Five absences! At this rate, your classes might file a missing report on you.";
+      }
+      if (absent === 4) {
+        return "Four absences! Looks like you're setting a record for 'Most Absent'.";
+      }
+      if (absent === 3) {
+        return "Three absences already! Even NMIMS admin would be shocked.";
+      }
+      if (absent === 2) {
+        return "Two absences? Your attendance is starting to look like NMIMS fee hikes – beware!";
+      }
+      if (absent === 1) {
+        return "One absent? NMIMS admin might overlook it... for now.";
+      }
+      return "";
+    }
+    function updateTable() {
+      const tbody = document.querySelector("#attendanceTable tbody");
+      tbody.innerHTML = "";
+      subjects.forEach((sub, index) => {
+        const absent = calculateAbsent(sub.conducted, sub.attended);
+        const attendancePercent = calculateAttendancePercent(sub.conducted, sub.attended);
+        const remainingLeaves = sub.conducted < sub.scheduled ? calculateRemainingLeaves(sub.scheduled, sub.conducted, sub.attended) : 0;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${sub.name}</td>
+          <td>${sub.faculty}</td>
+          <td>${sub.scheduled}</td>
+          <td>${sub.conducted}</td>
+          <td>${sub.attended}</td>
+          <td>${absent}</td>
+          <td>${attendancePercent}%</td>
+          <td>${remainingLeaves}</td>
+          <td>
+            <button class="btn" onclick="markPresent(${index})">Present</button>
+            <button class="btn" onclick="markAbsent(${index})">Absent</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+        const warningMessage = getAbsenceWarning(sub.scheduled, sub.conducted, sub.attended);
+        if (warningMessage !== "") {
+          const warnRow = document.createElement("tr");
+          warnRow.innerHTML = `<td colspan="9" class="warning">${warningMessage}</td>`;
+          tbody.appendChild(warnRow);
+        }
+      });
+    }
+    function markPresent(index) {
+      subjects[index].conducted++;
+      subjects[index].attended++;
+      saveSubjects();
+      updateTable();
+    }
+    function markAbsent(index) {
+      subjects[index].conducted++;
+      saveSubjects();
+      updateTable();
+    }
+    function exportCSV() {
+      let csvContent = "data:text/csv;charset=utf-8,Subject,Faculty,Scheduled,Conducted,Attended,Absent,Attendance%\n";
+      subjects.forEach(sub => {
+        const absent = calculateAbsent(sub.conducted, sub.attended);
+        const attendancePercent = calculateAttendancePercent(sub.conducted, sub.attended);
+        csvContent += `${sub.name},${sub.faculty},${sub.scheduled},${sub.conducted},${sub.attended},${absent},${attendancePercent}%\n`;
+      });
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "attendance_data.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    // --- Update Attendance Modal Functions ---
+    function showUpdateModal() {
+      const modal = document.getElementById("updateModal");
+      const tbody = document.getElementById("updateTableBody");
+      tbody.innerHTML = "";
+      subjects.forEach((sub, index) => {
+        const absent = calculateAbsent(sub.conducted, sub.attended);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${sub.name}</td>
+          <td><input type="number" id="updConducted_${index}" value="${sub.conducted}" min="0" style="width:60px;"></td>
+          <td><input type="number" id="updAttended_${index}" value="${sub.attended}" min="0" style="width:60px;"></td>
+          <td id="updAbsent_${index}">${absent}</td>
+        `;
+        setTimeout(() => {
+          document.getElementById(`updConducted_${index}`).addEventListener("input", function() {
+            let con = parseInt(this.value) || 0;
+            let att = parseInt(document.getElementById(`updAttended_${index}`).value) || 0;
+            if (att > con) att = con;
+            this.parentElement.parentElement.cells[3].textContent = con - att;
+          });
+          document.getElementById(`updAttended_${index}`).addEventListener("input", function() {
+            let con = parseInt(document.getElementById(`updConducted_${index}`).value) || 0;
+            let att = parseInt(this.value) || 0;
+            if (att > con) att = con;
+            this.parentElement.parentElement.cells[3].textContent = con - att;
+          });
+        }, 0);
+        tbody.appendChild(row);
+      });
+      modal.style.display = "block";
+    }
+    function closeUpdateModal() {
+      document.getElementById("updateModal").style.display = "none";
+    }
+    function saveManualUpdate() {
+      subjects.forEach((sub, index) => {
+        let con = parseInt(document.getElementById(`updConducted_${index}`).value) || 0;
+        let att = parseInt(document.getElementById(`updAttended_${index}`).value) || 0;
+        if (att > con) att = con;
+        sub.conducted = con;
+        sub.attended = att;
+      });
+      saveSubjects();
+      updateTable();
+      closeUpdateModal();
+    }
+    
+    // --- Subject Management Modal Functions ---
+    function showSubjectModal() {
+      const modal = document.getElementById("subjectModal");
+      const tbody = document.getElementById("subjectTableBody");
+      tbody.innerHTML = "";
+      subjects.forEach((sub, index) => {
+        let sessionsText = "";
+        if (sub.sessions && sub.sessions.length > 0) {
+          sessionsText = sub.sessions.map(s => s.day + " " + s.time).join(", ");
+        }
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><input type="text" id="subName_${index}" value="${sub.name}"></td>
+          <td><input type="text" id="subFaculty_${index}" value="${sub.faculty}"></td>
+          <td><input type="number" id="subScheduled_${index}" value="${sub.scheduled}" min="1" style="width:60px;"></td>
+          <td>
+            ${sessionsText} 
+            <button class="btn" onclick="showSessionModal(${index})">Edit Sessions</button>
+          </td>
+          <td><button class="btn" onclick="removeSubject(${index})">Remove</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+      modal.style.display = "block";
+    }
+    function closeSubjectModal() {
+      document.getElementById("subjectModal").style.display = "none";
+    }
+    function removeSubject(index) {
+      if (confirm("Are you sure you want to remove this subject?")) {
+        subjects.splice(index, 1);
+        showSubjectModal();
+      }
+    }
+    function addNewSubject() {
+      const name = document.getElementById("newSubName").value.trim();
+      const faculty = document.getElementById("newSubFaculty").value.trim();
+      const scheduled = parseInt(document.getElementById("newSubScheduled").value) || 0;
+      if (!name || !faculty || scheduled <= 0) {
+        alert("Please fill in all fields for the new subject.");
+        return;
+      }
+      subjects.push({ name: name, faculty: faculty, scheduled: scheduled, sessions: [], conducted: 0, attended: 0 });
+      document.getElementById("newSubName").value = "";
+      document.getElementById("newSubFaculty").value = "";
+      document.getElementById("newSubScheduled").value = "";
+      showSubjectModal();
+    }
+    function saveSubjectChanges() {
+      subjects.forEach((sub, index) => {
+        const newName = document.getElementById(`subName_${index}`).value.trim();
+        const newFaculty = document.getElementById(`subFaculty_${index}`).value.trim();
+        const newScheduled = parseInt(document.getElementById(`subScheduled_${index}`).value) || sub.scheduled;
+        if (newName) sub.name = newName;
+        if (newFaculty) sub.faculty = newFaculty;
+        sub.scheduled = newScheduled;
+      });
+      saveSubjects();
+      updateTable();
+      closeSubjectModal();
+    }
+    
+    // --- Session Management Modal Functions ---
+    function showSessionModal(subjectIndex) {
+      currentSubjectIndexForSession = subjectIndex;
+      const subject = subjects[subjectIndex];
+      document.getElementById("sessionSubjectName").textContent = subject.name;
+      const tbody = document.getElementById("sessionTableBody");
+      tbody.innerHTML = "";
+      if (subject.sessions && subject.sessions.length > 0) {
+        subject.sessions.forEach((sess) => {
+          addSessionRow(sess.day, sess.time);
+        });
+      }
+      document.getElementById("sessionModal").style.display = "block";
+    }
+    function closeSessionModal() {
+      document.getElementById("sessionModal").style.display = "none";
+    }
+    function addSessionRow(day = "Monday", time = "09:00") {
+      const tbody = document.getElementById("sessionTableBody");
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <select class="sessionDay">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+          </select>
+        </td>
+        <td>
+          <input type="time" class="sessionTime" value="${time}">
+        </td>
+        <td>
+          <button class="btn" onclick="this.parentElement.parentElement.remove()">Remove</button>
+        </td>
+      `;
+      tr.querySelector(".sessionDay").value = day;
+      tbody.appendChild(tr);
+    }
+    function addNewSessionRow() {
+      addSessionRow();
+    }
+    function saveSessions() {
+      const tbody = document.getElementById("sessionTableBody");
+      const rows = tbody.querySelectorAll("tr");
+      let sessions = [];
+      rows.forEach(row => {
+        const day = row.querySelector(".sessionDay").value;
+        const time = row.querySelector(".sessionTime").value;
+        sessions.push({ day, time });
+      });
+      subjects[currentSubjectIndexForSession].sessions = sessions;
+      saveSubjects();
+      closeSessionModal();
+      showSubjectModal();
+    }
+    
+    // --- Info Modal Functions ---
+    function showInfoModal() {
+      document.getElementById("infoModal").style.display = "block";
+    }
+    function closeInfoModal() {
+      document.getElementById("infoModal").style.display = "none";
+    }
+    
+    // --- User Details Modal Functions ---
+    function showUserDetailsModal() {
+      document.getElementById("userDetailsModal").style.display = "block";
+    }
+    function closeUserDetailsModal() {
+      document.getElementById("userDetailsModal").style.display = "none";
+    }
+    function saveUserDetails() {
+      const school = "School of Law";
+      const course = document.getElementById("userCourse").value;
+      const semester = document.getElementById("userSemester").value.trim();
+      const campus = document.getElementById("userCampus").value.trim();
+      if (!course || !semester || !campus) {
+        alert("Please fill in all your academic details.");
+        return;
+      }
+      const profile = { school, course, semester, campus };
+      saveUserProfile(profile);
+      closeUserDetailsModal();
+      updateProfileHeader();
+      if (subjects.length === 0) {
+        showSubjectModal();
+      }
+    }
+    function updateProfileHeader() {
+      const profile = loadUserProfile();
+      if (profile) {
+        document.getElementById("profileHeader").innerHTML = `
+          <p>
+            <strong>School:</strong> ${profile.school} &nbsp;&nbsp;
+            <strong>Course:</strong> ${profile.course} &nbsp;&nbsp;
+            <strong>Semester:</strong> ${profile.semester} &nbsp;&nbsp;
+            <strong>Campus:</strong> ${profile.campus}
+          </p>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
